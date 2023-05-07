@@ -5,11 +5,10 @@ from scipy import stats
 def process_pearson(x):
     return np.corrcoef(x.T)
 
-def process_spearman_np(x):
+def process_spearman(x):
     return np.corrcoef(stats.rankdata(x,axis=0).T)
 
-def groupby_corr_numpy(df, features, targets, eras, func):
-    cols = features + targets
+def groupby_corr_numpy(df, eras, cols, func):
     ids, index = np.unique(df[eras], return_index=True)
     splits = np.split(df[cols].values, index[1:])
     ret = Parallel()(delayed(func)(x) for time_id, x in zip(ids.tolist(), splits))
@@ -18,8 +17,4 @@ def groupby_corr_numpy(df, features, targets, eras, func):
     return ret
 
 all_data = pd.concat([train_data, train_targets[targets]], axis=1)
-
-#%%time
-#corrs_by_moons = groupby_corr_numpy(all_data, features, targets, eras, process_pearson)
-corrs_by_moons = groupby_corr_numpy(all_data, features, targets, eras, process_spearman_np)
-corrs_by_moons.head()
+corrs_by_moons = groupby_corr_numpy(all_data, eras, features+targets, process_spearman_np)
