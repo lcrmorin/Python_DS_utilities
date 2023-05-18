@@ -17,4 +17,4 @@ def groupby_corr_numpy(df, eras, cols, func):
     return ret
 
 all_data = pd.concat([train_data, train_targets[targets]], axis=1)
-corrs_by_moons = groupby_corr_numpy(all_data, eras, features+targets, process_spearman_np)
+corrs_by_moons = groupby_corr_numpy(all_data, eras, features+targets, process_spearman)
