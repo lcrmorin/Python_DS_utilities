@@ -8,7 +8,7 @@ data_int = pd.read_csv('/kaggle/input/icr-integer-data/train_integerized.csv')
 def better_describe(df):
     
     df_describe = df.describe()
-    df_describe.loc['dtype'] = data_int.dtypes
+    df_describe.loc['dtype'] = df.dtypes
     df_describe.loc['unique_count'] = df.nunique()
     df_describe.loc['nan_count'] = df.isna().sum()
     
@@ -21,7 +21,7 @@ def better_describe(df):
                 df_describe.loc['constant_diff',c] = min_diffs
     
     for value in [np.inf,-np.inf]:
-        df_describe.loc[f'{str(value)}_count'] = (data_int == value).sum()
+        df_describe.loc[f'{str(value)}_count'] = (df == value).sum()
 
     order = ['dtype','count','unique_count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'constant_diff', 'nan_count', 'inf_count','-inf_count']
         
