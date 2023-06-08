@@ -1,30 +1,26 @@
-import pandas as pd
-import numpy as np
+import pandas as pd, numpy as np
+from collections import defaultdict
 import seaborn as sns
 
-df = pd.DataFrame({'feature':[-1,0,1,12], 'target':[0.0012, 0.021, 0, np.nan]})
+df = pd.DataFrame({'feature':[-1,0,1,12],'target':[0.0012, 0.021, 0, np.nan]})
 col = df.columns
 
-# base fomatting
+dict_format =  defaultdict(lambda: {})
+dict_format.update({'target': '{0:.2%}'})
 
-dict_format =  {'feature': '{}',
-           'target': '{0:.2%}'}
+dict_color =  defaultdict(lambda: 'Blues')
+dict_color.update({'feature': 'Spectral'})
 
-dict_color =  {'feature': 'Spectral',
-           'target': 'Blues'}
-
-dict_v = {'feature': (-np.abs(df.value1).max(), np.abs(df.value1).max()),
-          'target': (None, None)
-    }
+dict_v =  defaultdict(lambda: (None, None))
+dict_v.update({'feature': (-np.abs(df.feature).max(), np.abs(df.feature).max())})
 
 df_style = df.style
 
 for c in col:
     df_style = df_style.background_gradient(subset=c, cmap=dict_color[c], 
-                                            vmin=dict_v[c][0], vmax=dict_v[c][1]).format({c: dict_format[c]})
+                                            vmin=dict_v[c][0], vmax=dict_v[c][1]).format(dict_format[c])
 
 df_style.applymap(lambda x: 'background: lightgrey' if pd.isnull(x) else '').applymap(lambda x: 'color: transparent' if pd.isnull(x) else '')
-
 # base dependance plot
 
 sns.regplot(x=df[feature], 
