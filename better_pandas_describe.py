@@ -7,7 +7,7 @@ data_int = pd.read_csv('/kaggle/input/icr-integer-data/train_integerized.csv')
 
 def better_describe(df):
     
-    df_describe = df.describe()
+    df_describe = df.describe(include='all')
     df_describe.loc['dtype'] = df.dtypes
     df_describe.loc['unique_count'] = df.nunique()
     df_describe.loc['nan_count'] = df.isna().sum()
