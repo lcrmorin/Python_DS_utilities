@@ -3,9 +3,7 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from pandas.core.base import PandasObject
 
-data_int = pd.read_csv('/kaggle/input/icr-integer-data/train_integerized.csv')
-
-def better_describe(df):
+def better_describe(df, values_list=[np.inf,-np.inf]):
     
     df_describe = df.describe(include='all')
     df_describe.loc['dtype'] = df.dtypes
@@ -20,13 +18,11 @@ def better_describe(df):
             if all([i.is_integer() for i in (diffs/min_diffs)]):
                 df_describe.loc['constant_diff',c] = min_diffs
     
-    for value in [np.inf,-np.inf]:
+    for value in values_list:
         df_describe.loc[f'{str(value)}_count'] = (df == value).sum()
 
-    order = ['dtype','count','unique_count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'constant_diff', 'nan_count', 'inf_count','-inf_count']
+    order = ['dtype','count','unique_count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'constant_diff', 'nan_count'] + [f'{str(value)}_count' for value in values_list]
         
     return df_describe.loc[order]
 
 PandasObject.better_describe = better_describe
-
-data_int.better_describe()
